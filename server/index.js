@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const path = require('path'); // 👈 Path module import kiya
+const path = require('path'); 
 const authRoute = require("./routes/auth");
 
 const app = express();
@@ -17,17 +17,16 @@ mongoose.connect(process.env.MONGO_URI)
 app.use("/api/auth", authRoute);
 
 // ==========================================
-// 🚀 CHAAND SITAARE FRONTEND SERVE (NEW PART)
+// 🚀 CHAAND SITAARE FRONTEND SERVE (FIXED FOR EXPRESS V5)
 // ==========================================
 
-// 1. Express ko batao ki static files 'client/dist' folder se uthaye
+// 1. Static files 'client/dist' folder se serve karein
 app.use(express.static(path.join(__dirname, "../client/dist")));
 
-// 2. Saare generic web routes (jaise /, /login, /shop) ko frontend ki index.html par map karein
-app.get("*", (req, res) => {
+// 2. Wildcard handler fixed with '(.*)' for Express v5 compliance
+app.get("(.*)", (req, res) => {
     res.sendFile(path.join(__dirname, "../client/dist/index.html"));
 });
 
-// Render par PORT environment variable se aata hai, local par 5000 chalega
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
