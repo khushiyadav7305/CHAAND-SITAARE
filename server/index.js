@@ -17,15 +17,18 @@ mongoose.connect(process.env.MONGO_URI)
 app.use("/api/auth", authRoute);
 
 // ==========================================
-// 🚀 CHAAND SITAARE FRONTEND SERVE (FIXED FOR STRICT EXPRESS V5)
+// 🚀 CHAAND SITAARE FRONTEND SERVE (NO-REGEX SAFE FALLBACK)
 // ==========================================
 
 // 1. Static files 'client/dist' folder se serve karein
 app.use(express.static(path.join(__dirname, "../client/dist")));
 
-// 2. Named parameter syntax used for catch-all router mapping
-app.get("/:splat*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../client/dist/index.html"));
+// 2. Custom middleware fallback - strict regex validations ko bypass karne ke liye
+app.use((req, res, next) => {
+    if (!req.url.startsWith('/api')) {
+        return res.sendFile(path.join(__dirname, "../client/dist/index.html"));
+    }
+    next();
 });
 
 const PORT = process.env.PORT || 5000;
