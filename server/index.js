@@ -17,14 +17,14 @@ mongoose.connect(process.env.MONGO_URI)
 app.use("/api/auth", authRoute);
 
 // ==========================================
-// 🚀 CHAAND SITAARE FRONTEND SERVE (FIXED FOR EXPRESS V5)
+// 🚀 CHAAND SITAARE FRONTEND SERVE (FIXED FOR STRICT EXPRESS V5)
 // ==========================================
 
 // 1. Static files 'client/dist' folder se serve karein
 app.use(express.static(path.join(__dirname, "../client/dist")));
 
-// 2. Wildcard handler fixed with '(.*)' for Express v5 compliance
-app.get("(.*)", (req, res) => {
+// 2. Named parameter syntax used for catch-all router mapping
+app.get("/:splat*", (req, res) => {
     res.sendFile(path.join(__dirname, "../client/dist/index.html"));
 });
 
